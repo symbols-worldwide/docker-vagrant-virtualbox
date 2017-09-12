@@ -2,10 +2,11 @@ FROM symbols/virtualbox:5.1
 
 LABEL maintainer="simon@widgit.com"
 
-RUN wget -O /root/vagrant_1.9.8_x86_64.deb \
-      https://releases.hashicorp.com/vagrant/1.9.8/vagrant_1.9.8_x86_64.deb && \
-    dpkg -i /root/vagrant_1.9.8_x86_64.deb && \
-    rm /root/vagrant_1.9.8_x86_64.deb && \
+RUN VERSION=$(wget -O- https://releases.hashicorp.com/vagrant/ | fgrep 'href="/vagrant' | head -1 | sed -r 's/.*([0-9].[0-9].[0-9]).*/\1/') && \
+    wget -O /root/vagrant.deb \
+      https://releases.hashicorp.com/vagrant/${VERSION}/vagrant_${VERSION}_x86_64.deb && \
+    dpkg -i /root/vagrant.deb && \
+    rm /root/vagrant.deb && \
     apt-get -y update && \
     apt-get -y install rsync && \
     apt-get -y clean
